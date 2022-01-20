@@ -24,9 +24,9 @@ export function logout() {
 }
 
 
-export function getUserList() {
+export function getUserList(parms) {
   return request({
-    url: 'api/sys/user/list',
+    url: 'api/sys/user/list?'+parms,
     method: 'get'
   })
 }

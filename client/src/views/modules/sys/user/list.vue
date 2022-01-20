@@ -1,5 +1,10 @@
 <template>
   <div class="app-container">
+    <el-row>
+      <el-button type="primary">添加</el-button>
+      <el-button type="primary">编辑</el-button>
+      <el-button type="danger">删除</el-button>
+    </el-row>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -66,10 +71,10 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getUserList().then(response => {
+      let parms = 'page='+this.listQuery.page+'&limit='+this.listQuery.limit
+      getUserList(parms).then(response => {
         this.list = response.page.list 
         this.total = response.page.totalCount
-        debugger
 
         // Just to simulate the time of the request
         setTimeout(() => {
