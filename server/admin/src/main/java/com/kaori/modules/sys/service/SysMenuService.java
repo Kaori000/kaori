@@ -20,7 +20,7 @@ public interface SysMenuService extends IService<SysMenuEntity> {
 
     List<SysMenuEntity> getMenuList();
 
-    List<SysMenuEntity> getMenu();
+    List<SysMenuEntity> getMenuNav();
 
 }
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
+import com.kaori.common.utils.Constant;
 import com.kaori.common.utils.PageUtils;
 import com.kaori.common.utils.Query;
 import com.kaori.modules.sys.dao.SysMenuDao;
@@ -38,7 +39,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
 
 
     @Override
-    public List<SysMenuEntity> getMenu() {
+    public List<SysMenuEntity> getMenuNav() {
         List<SysMenuEntity> allMenu = sysMenuDao.getAllMenu();
         List<SysMenuEntity> collect = allMenu.stream().filter(f -> f.getParentId().equals("0")).map((m) -> {
             m.setChildren(getChildren(allMenu, m));
@@ -53,6 +54,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
     public List<SysMenuEntity> getChildren(List<SysMenuEntity> list,SysMenuEntity root){
         List<SysMenuEntity> collect = list.stream().filter(f -> f.getParentId().equals(root.getId())).map((m) -> {
             m.setChildren(getChildren(list, m));
+
             return m;
         }).collect(Collectors.toList());
         return collect;

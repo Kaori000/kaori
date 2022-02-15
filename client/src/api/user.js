@@ -19,15 +19,46 @@ export function getInfo(token) {
 export function logout() {
   return request({
     url: 'api/logout',
-    method: 'post'
+    method: 'get'
   })
 }
 
 
-export function getUserList(parms) {
+export function getUsers(parms) {
   return request({
     url: 'api/sys/user/list?'+parms,
     method: 'get'
+  })
+}
+
+export function getUser(parms) {
+  return request({
+    url: 'api/sys/user/'+parms,
+    method: 'get'
+  })
+}
+
+export function saveUser(parms) {
+  return request({
+    url: 'api/sys/user/save',
+    method: 'post',
+    data: parms
+  })
+}
+
+export function updateUser(parms) {
+  return request({
+    url: 'api/sys/user/update',
+    method: 'put',
+    data: parms
+  })
+}
+
+export function deleteUser(parms) {
+  return request({
+    url: 'api/sys/user/delete',
+    method: 'delete',
+    data: parms
   })
 }
 
