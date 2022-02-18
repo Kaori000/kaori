@@ -48,4 +48,23 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUserEntity> i
         save(sysUserEntity);
     }
 
+    @Override
+    public boolean updatePassword(String userId, String password, String newPassword) {
+        SysUserEntity userEntity = new SysUserEntity();
+        userEntity.setPassword(newPassword);
+        return this.update(userEntity,
+                new QueryWrapper<SysUserEntity>().eq("user_id", userId).eq("password", password));
+    }
+
+    @Override
+    public boolean isExist(String userName) {
+        QueryWrapper<SysUserEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",userName);
+        if (getOne(queryWrapper) != null){
+            //用户已存在
+            return false;
+        }
+        return true;
+    }
+
 }

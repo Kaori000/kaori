@@ -9,7 +9,9 @@ import com.kaori.common.utils.PageUtils;
 import com.kaori.common.utils.Query;
 import com.kaori.modules.sys.dao.SysMenuDao;
 import com.kaori.modules.sys.entity.SysMenuEntity;
+import com.kaori.modules.sys.entity.SysRoleMenuEntity;
 import com.kaori.modules.sys.service.SysMenuService;
+import com.kaori.modules.sys.service.SysRoleMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
     @Autowired
     SysMenuDao sysMenuDao;
 
+    @Autowired
+    SysRoleMenuService sysRoleMenuService;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<SysMenuEntity> page = this.page(
@@ -48,6 +52,11 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
         return collect;
     }
 
+    @Override
+    public List<SysMenuEntity> queryListParentId(String parentId) {
+        return baseMapper.queryListParentId(parentId);
+    }
+
     /**
      * 获取子节点
      */
@@ -58,6 +67,14 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuDao, SysMenuEntity> i
             return m;
         }).collect(Collectors.toList());
         return collect;
+    }
+
+    @Override
+    public void delete(String menuId){
+        //删除菜单
+        this.removeById(menuId);
+        //删除菜单与角色关联
+        sysRoleMenuService.remove(new QueryWrapper<SysRoleMenuEntity>().eq("menu_id", menuId));
     }
 
 }

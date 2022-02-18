@@ -53,5 +53,9 @@ public class SysDictEntity implements Serializable {
 	 * 
 	 */
 	private Integer delFlag;
+	/**
+	 *
+	 */
+	private Integer preset;
 
 }

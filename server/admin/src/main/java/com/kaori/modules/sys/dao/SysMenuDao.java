@@ -18,4 +18,11 @@ import java.util.List;
 public interface SysMenuDao extends BaseMapper<SysMenuEntity> {
     @Select("select * from sys_menu")
     public List<SysMenuEntity> getAllMenu();
+
+    /**
+     * 根据父菜单，查询子菜单
+     * @param parentId 父菜单ID
+     */
+    List<SysMenuEntity> queryListParentId(String parentId);
+
 }

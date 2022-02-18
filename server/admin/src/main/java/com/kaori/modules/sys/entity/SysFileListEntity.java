@@ -44,7 +44,7 @@ public class SysFileListEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private Double fileSize;
+	private Long fileSize;
 	/**
 	 * 
 	 */
@@ -52,7 +52,7 @@ public class SysFileListEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private Integer userId;
+	private String userId;
 	/**
 	 * 
 	 */

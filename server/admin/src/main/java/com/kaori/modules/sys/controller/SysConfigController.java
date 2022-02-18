@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.kaori.common.annotation.SysLog;
 import com.kaori.common.validator.ValidatorUtils;
+import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ import com.kaori.common.utils.R;
  * @email kaoriii@163.com
  * @date 2022-01-18 14:59:59
  */
+@Api("系统配置")
 @RestController
 @RequestMapping("sys/config")
 public class SysConfigController {

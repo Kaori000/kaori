@@ -7,15 +7,16 @@ server:
   port: 8081
   servlet:
     context-path: /api
-
+swagger:
+  enable=true:
 spring:
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://124.222.110.172:3306/kaori?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
-    username: root
-    password: root
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://124.222.110.172:3306/kaori?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+#    username: root
+#    password: root
   profiles:
-    active:
+    active: dev
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -27,9 +28,10 @@ spring:
   cache: redis
   redis:
     database: 0
-    host: 124.222.110.172
+#    host: 124.222.110.172
+    host: 127.0.0.1
     port: 6379
-    password: 123456  # 密码
+    password:   # 密码
     timeout: 6000ms  # 连接超时时长（毫秒）
     jedis:
       pool:

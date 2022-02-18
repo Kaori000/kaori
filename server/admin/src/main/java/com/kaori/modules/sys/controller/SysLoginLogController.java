@@ -1,10 +1,15 @@
 package com.kaori.modules.sys.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.kaori.common.annotation.SysLog;
+import com.kaori.common.utils.CommonUtils;
 import com.kaori.common.validator.ValidatorUtils;
+import com.kaori.modules.sys.vo.LoginLogVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +32,7 @@ import com.kaori.common.utils.R;
  * @email kaoriii@163.com
  * @date 2022-01-18 14:59:58
  */
+@Api(tags="登录日志模块")
 @RestController
 @RequestMapping("sys/loginlog")
 public class SysLoginLogController {
@@ -36,63 +42,15 @@ public class SysLoginLogController {
     /**
      * 列表
      */
-    @SysLog("列表")
+    @ApiOperation(value="获取登录日志列表")
     @GetMapping("/list")
     @RequiresPermissions("sys:loginlog:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = sysLoginLogService.queryPage(params);
+    public R list(LoginLogVo params) {
+        Map<String ,Object> param = CommonUtils.convertToMap(params);
+        PageUtils page = sysLoginLogService.queryPage(param);
+        List<SysLoginLogEntity> sysLoginLogEntityList = (List<SysLoginLogEntity>) page.getList();
 
-        return R.ok().put("page", page);
-    }
-
-
-    /**
-     * 信息
-     */
-    @SysLog("信息")
-    @GetMapping("/info/{id}")
-    @RequiresPermissions("sys:loginlog:info")
-    public R info(@PathVariable("id") String id){
-        SysLoginLogEntity sysLoginLog = sysLoginLogService.getById(id);
-
-        return R.ok().put("sysLoginLog", sysLoginLog);
-    }
-
-    /**
-     * 保存
-     */
-    @SysLog("保存")
-    @PostMapping("/save")
-    @RequiresPermissions("sys:loginlog:save")
-    public R save(@RequestBody SysLoginLogEntity sysLoginLog){
-        sysLoginLogService.save(sysLoginLog);
-
-        return R.ok();
-    }
-
-    /**
-     * 修改
-     */
-    @SysLog("修改")
-    @PatchMapping("/update")
-    @RequiresPermissions("sys:loginlog:update")
-    public R update(@RequestBody SysLoginLogEntity sysLoginLog){
-        ValidatorUtils.validateEntity(sysLoginLog);
-        sysLoginLogService.updateById(sysLoginLog);
-        
-        return R.ok();
-    }
-
-    /**
-     * 删除
-     */
-    @SysLog("删除")
-    @DeleteMapping("/delete")
-    @RequiresPermissions("sys:loginlog:delete")
-    public R delete(@RequestBody String[] ids){
-        sysLoginLogService.removeByIds(Arrays.asList(ids));
-
-        return R.ok();
+        return R.ok().put("count", page.getTotalCount()).put("data",sysLoginLogEntityList);
     }
 
 }

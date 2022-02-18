@@ -8,7 +8,10 @@ import java.util.stream.Collectors;
 
 import com.kaori.common.annotation.SysLog;
 import com.kaori.common.utils.Constant;
+import com.kaori.common.utils.MessageCode;
 import com.kaori.common.validator.ValidatorUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +34,7 @@ import com.kaori.common.utils.R;
  * @email kaoriii@163.com
  * @date 2022-01-18 14:59:59
  */
+@Api(tags="系统菜单")
 @RestController
 @RequestMapping("sys/menu")
 public class SysMenuController {
@@ -41,6 +45,7 @@ public class SysMenuController {
      * 列表
      */
     @SysLog("列表")
+    @ApiOperation(value="获取菜单列表")
     @GetMapping("/list")
     @RequiresPermissions("sys:menu:list")
     public R list(@RequestParam Map<String, Object> params){
@@ -52,7 +57,8 @@ public class SysMenuController {
     /**
      * 获取菜单列表树形结构
      */
-    @SysLog("列表")
+    @SysLog("获取导航菜单")
+    @ApiOperation(value="获取导航菜单")
     @GetMapping("/nav")
     @RequiresPermissions("sys:menu:nav")
     public R nav(){
@@ -62,6 +68,7 @@ public class SysMenuController {
     }
 
     @SysLog("列表")
+    @ApiOperation(value="获取导航菜单（非按钮）")
     @GetMapping("/node")
     @RequiresPermissions("sys:menu:nav")
     public R node(){
@@ -74,6 +81,7 @@ public class SysMenuController {
     /**
      * 信息
      */
+    @ApiOperation(value="获取菜单信息")
     @SysLog("信息")
     @GetMapping("/info/{id}")
     @RequiresPermissions("sys:menu:info")
@@ -87,6 +95,7 @@ public class SysMenuController {
      * 保存
      */
     @SysLog("保存")
+    @ApiOperation(value="添加菜单")
     @PostMapping("/save")
     @RequiresPermissions("sys:menu:save")
     public R save(@RequestBody SysMenuEntity sysMenu){
@@ -99,6 +108,7 @@ public class SysMenuController {
      * 修改
      */
     @SysLog("修改")
+    @ApiOperation(value="修改菜单")
     @PatchMapping("/update")
     @RequiresPermissions("sys:menu:update")
     public R update(@RequestBody SysMenuEntity sysMenu){
@@ -112,10 +122,19 @@ public class SysMenuController {
      * 删除
      */
     @SysLog("删除")
+    @ApiOperation(value="删除菜单")
     @DeleteMapping("/delete")
     @RequiresPermissions("sys:menu:delete")
     public R delete(@RequestBody String[] ids){
-        sysMenuService.removeByIds(Arrays.asList(ids));
+        for (int i = 0; i < ids.length; i++) {
+            String menuId = ids[i];
+            //判断是否有子菜单或按钮
+            List<SysMenuEntity> menuList = sysMenuService.queryListParentId(menuId);
+            if(menuList.size() > 0){
+                return R.error(MessageCode.MENU_OPERATION_FIRST_DELETE_PREVIOUS_MENU.getCode(), "请先删除子菜单或按钮");
+            }
+            sysMenuService.delete(menuId);
+        }
 
         return R.ok();
     }

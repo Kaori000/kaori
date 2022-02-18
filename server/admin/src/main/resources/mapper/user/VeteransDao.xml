@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kaori.modules.user.dao.VeteransDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.kaori.modules.user.entity.VeteransEntity" id="veteransMap">
+        <result property="id" column="id"/>
+        <result property="age" column="age"/>
+        <result property="soldierAge" column="soldier_age"/>
+        <result property="retirementTime" column="retirement_time"/>
+        <result property="dischargeCertificate" column="discharge_certificate"/>
+        <result property="pass" column="pass"/>
+    </resultMap>
+
+
+</mapper>

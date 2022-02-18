@@ -1,5 +1,6 @@
 package com.kaori.modules.sys.controller;
 
+import com.kaori.common.exception.RRException;
 import com.kaori.common.utils.MessageCode;
 import com.kaori.common.utils.R;
 import com.kaori.common.utils.StringUtil;
@@ -7,6 +8,8 @@ import com.kaori.modules.sys.entity.SysUserEntity;
 import com.kaori.modules.sys.redis.RedisUtils;
 import com.kaori.modules.sys.shiro.ShiroUtils;
 import com.kaori.modules.sys.vo.LoginVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 
+@Api(tags="登录")
 @RestController
 public class SysLoginController {
     @Value("${kaori.isSingle}")
@@ -30,6 +34,7 @@ public class SysLoginController {
     @Autowired
     private RedisOperationsSessionRepository redisOperationsSessionRepository;
 
+    @ApiOperation(value="用户登录")
     @PostMapping(value = "/sys/login")
     public R login(@RequestBody LoginVo loginObject, HttpServletRequest request) {
         String username = loginObject.getUsername();
@@ -55,7 +60,9 @@ public class SysLoginController {
 
         SysUserEntity user = (SysUserEntity) SecurityUtils.getSubject().getPrincipal();
 
-
+        if(user.getStatus().equals(0)){
+            throw new RRException("账号已禁用");
+        }
         if (isSingle) {
             //查看是否之前有登录的删除掉
             String lastSessionId = redisUtils.getSessionByUserId(user.getId());
@@ -74,6 +81,7 @@ public class SysLoginController {
                 ));
     }
 
+    @ApiOperation(value="登出")
     @GetMapping(value = "logout")
     public R logout() {
         redisOperationsSessionRepository.deleteById(ShiroUtils.getSession().getId().toString());
